@@ -616,11 +616,11 @@ function AggregateIndex() {
       {/* Aggregate CTA Banner */}
       <div className="bg-transparent flex flex-col md:flex-row items-center justify-between p-[32px] md:p-[48px] w-full border-t border-white/10">
         <div className="flex flex-col mb-[24px] md:mb-0">
-          <h4 className="font-sans font-black text-[18px] md:text-[24px] uppercase text-white m-0 leading-tight">Need a Specific Size or Custom Blend?</h4>
-          <p className="font-sans text-[14px] md:text-[16px] text-white/70 m-0 mt-[8px]">Contact our office for current availability, pricing, and specialized materials.</p>
+          <h4 className="font-sans font-black text-[18px] md:text-[24px] uppercase text-white m-0 leading-tight">Need more information?</h4>
+          <p className="font-sans text-[14px] md:text-[16px] text-white/70 m-0 mt-[8px]">Contact our office for current availability, pricing, and specialized details.</p>
         </div>
         <button className="bg-signal-red border border-signal-red hover:bg-transparent hover:text-signal-red text-white font-mono text-[13px] md:text-[14px] font-bold tracking-[0.1em] uppercase py-[18px] px-[36px] md:py-[20px] md:px-[40px] transition-all duration-300 cursor-pointer flex-shrink-0 flex items-center gap-3 group">
-          Call +1 (555) 019-9182 <ArrowUpRight size={18} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
+          Call Now <ArrowUpRight size={18} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
     </section>
