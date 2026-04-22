@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;700;900&family=Syne:wght@600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-river-navy: #0a1428;
+  --color-steel-charcoal: #121418;
+  --color-panel: #1f2937;
+  --color-signal-red: #e11d48;
+  
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
+  --font-extended: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+  @apply bg-steel-charcoal text-white font-sans;
+  background-color: var(--color-steel-charcoal);
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+::selection {
+  background-color: var(--color-signal-red);
+  color: white;
+}
+
+/* Custom utility for the grid system */
+.grid-line-white {
+  @apply border-white/10;
+}
+.grid-line-dark {
+  @apply border-black;
+}
+.grid-line-red {
+  border-color: var(--color-signal-red);
+}
+
+.bg-river-navy {
+  background-color: var(--color-river-navy);
+}
+
+.bg-steel-charcoal {
+  background-color: var(--color-steel-charcoal);
+}
+
+.bg-panel {
+  background-color: var(--color-panel);
+}
+
+.bg-signal-red {
+  background-color: var(--color-signal-red);
+}
+
+.text-signal-red {
+  color: var(--color-signal-red);
+}
+
+/* Hide scrollbar for gallery */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
