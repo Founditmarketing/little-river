@@ -192,11 +192,11 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
                             <motion.img 
                               key={hoveredService}
                               src={SERVICE_PAGES_DATA[hoveredService]?.imagePath}
-                              initial={{ opacity: 0, scale: 1.05 }}
-                              animate={{ opacity: 1, scale: 1 }}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
                               exit={{ opacity: 0 }}
                               transition={{ duration: 0.4 }}
-                              className="absolute inset-0 w-full h-full object-cover opacity-60"
+                              className="absolute inset-0 w-full h-full object-cover opacity-60 animate-slow-zoom"
                             />
                           </AnimatePresence>
                           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
@@ -449,7 +449,7 @@ function Hero({ isLoaded = true }: { isLoaded?: boolean }) {
         {/* Mobile Default Image (Hidden on Desktop) */}
         <img 
           src={HERO_IMAGES.default} 
-          className={`absolute inset-0 w-full h-full object-cover lg:hidden transition-opacity duration-700 ease-in-out ${hoveredService === null ? 'opacity-85' : 'opacity-0'}`} 
+          className={`absolute inset-0 w-full h-full object-cover lg:hidden transition-opacity duration-700 ease-in-out animate-slow-zoom ${hoveredService === null ? 'opacity-85' : 'opacity-0'}`} 
           alt="Mobile resting state"
         />
 
@@ -458,13 +458,13 @@ function Hero({ isLoaded = true }: { isLoaded?: boolean }) {
           {hoveredService && (
             <motion.img 
               key={hoveredService}
-              initial={{ opacity: 0, scale: 1.05 }}
-              animate={{ opacity: 0.85, scale: 1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.85 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.8, ease: "easeInOut" }}
               src={getBgImage()}
               referrerPolicy="no-referrer"
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover animate-slow-zoom"
               alt="Industrial maritime backdrop"
             />
           )}
@@ -711,7 +711,7 @@ function ServicesCarousel() {
             <motion.img 
               src={SERVICES_DATA[currentIndex].image} 
               alt={SERVICES_DATA[currentIndex].title}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[10s] ease-linear scale-100 group-hover:scale-105"
+              className="absolute inset-0 w-full h-full object-cover animate-slow-zoom"
             />
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/10 transition-opacity duration-500 group-hover:opacity-90 pointer-events-none"></div>
