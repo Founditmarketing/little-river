@@ -316,7 +316,7 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
                       <div key={item} className="flex flex-col border-b border-white/5">
                         <button 
                           onClick={() => setIsServicesOpen(!isServicesOpen)} 
-                          className="px-[32px] py-[28px] font-sans text-[22px] font-black tracking-[0.1em] text-white uppercase hover:text-signal-red hover:bg-white/5 transition-all flex items-center justify-between group cursor-pointer border-none bg-transparent"
+                          className="px-[32px] py-[20px] font-sans text-[18px] font-black tracking-[0.1em] text-white uppercase hover:text-signal-red hover:bg-white/5 transition-all flex items-center justify-between group cursor-pointer border-none bg-transparent"
                         >
                           {item}
                           <ChevronDown size={24} className={`transition-transform duration-300 ${isServicesOpen ? 'rotate-180' : ''} text-signal-red`} />
@@ -340,7 +340,7 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
                                   key={subItem.name} 
                                   to={subItem.path} 
                                   onClick={() => setIsMenuOpen(false)}
-                                  className="px-[48px] py-[20px] font-sans text-[16px] font-bold tracking-[0.1em] text-white/60 uppercase hover:text-white hover:bg-white/5 transition-colors no-underline border-l-2 border-transparent hover:border-signal-red"
+                                  className="px-[48px] py-[16px] font-sans text-[14px] font-bold tracking-[0.1em] text-white/60 uppercase hover:text-white hover:bg-white/5 transition-colors no-underline border-l-2 border-transparent hover:border-signal-red"
                                 >
                                   {subItem.name}
                                 </Link>
@@ -363,7 +363,7 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
                       to={isPageRoute ? path : undefined}
                       href={!isPageRoute ? `/#${item.toLowerCase().replace(' ', '-')}` : undefined}
                       onClick={() => setIsMenuOpen(false)} 
-                      className="px-[32px] py-[28px] border-b border-white/5 font-sans text-[22px] font-black tracking-[0.1em] text-white uppercase no-underline hover:text-signal-red hover:bg-white/5 transition-all flex items-center justify-between group"
+                      className="px-[32px] py-[20px] border-b border-white/5 font-sans text-[18px] font-black tracking-[0.1em] text-white uppercase no-underline hover:text-signal-red hover:bg-white/5 transition-all flex items-center justify-between group"
                     >
                       <span className="flex items-center gap-6">
                         <span className="text-[11px] text-white/20 font-mono font-normal">0{i+1}</span>
@@ -379,10 +379,9 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
               <div className="mt-auto bg-black/30 p-[32px] flex flex-col gap-3 border-t border-white/10">
                  <div className="flex items-center gap-3 font-mono text-[10px] text-signal-red font-bold tracking-[0.15em] uppercase mb-1">
                    <span className="w-1.5 h-1.5 rounded-full bg-signal-red animate-pulse"></span>
-                   Operations Desk
+                   Headquarters
                  </div>
-                 <div className="font-sans font-black text-[24px] tracking-tight text-white">+1 (555) 019-9182</div>
-                 <div className="font-sans text-[13px] text-white/50 leading-relaxed border-t border-white/10 pt-4 mt-2">
+                 <div className="font-sans text-[13px] text-white/80 leading-relaxed pt-2">
                    683 Hwy 459<br/>Olla LA 71465
                  </div>
               </div>
