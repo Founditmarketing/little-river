@@ -170,7 +170,7 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
           {['ABOUT', 'SERVICES', 'WHY US', 'CONTACT'].map((item) => {
             if (item === 'SERVICES') {
               return (
-                <div key={item} className="relative h-full flex items-center border-l border-white/10" onMouseEnter={() => setIsServicesOpen(true)} onMouseLeave={() => setIsServicesOpen(false)}>
+                <div key={item} className={`relative h-full flex items-center border-l transition-colors duration-300 ${isScrolled ? 'border-black/10' : 'border-white/10'}`} onMouseEnter={() => setIsServicesOpen(true)} onMouseLeave={() => setIsServicesOpen(false)}>
                   <div className={`flex items-center justify-center px-[32px] h-full cursor-pointer transition-colors duration-300 ${isScrolled ? 'hover:bg-black/5' : 'hover:bg-white/10'}`}>
                     <span className={`font-sans text-[11px] font-bold tracking-[0.15em] transition-colors duration-300 flex items-center gap-1 ${isScrolled ? (isServicesOpen ? 'text-black' : 'text-black/60') : (isServicesOpen ? 'text-white' : 'text-white/80')}`}>
                       {item} <ChevronDown size={14} className={`transition-transform duration-300 ${isServicesOpen ? 'rotate-180' : ''}`} />
