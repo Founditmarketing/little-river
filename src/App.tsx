@@ -494,7 +494,7 @@ function Hero({ isLoaded = true }: { isLoaded?: boolean }) {
               <span className="font-sans font-bold text-[10px] tracking-[0.3em] uppercase text-white/50 mb-[16px]">
                 {activeService ? `SERVICE HIGHLIGHT // 0${services.indexOf(activeService) + 1}` : 'EXPLORE OUR EXPERTISE'}
               </span>
-              <h1 className="font-sans font-extrabold text-[40px] md:text-[56px] leading-[0.95] tracking-[-0.03em] uppercase text-white m-0 mb-[24px] whitespace-pre-line">
+              <h1 className="font-sans font-extrabold text-[32px] sm:text-[40px] md:text-[56px] leading-[0.95] tracking-[-0.03em] uppercase text-white m-0 mb-[24px] whitespace-pre-line">
                 {activeService ? activeService.heroTitle : 'Industrial Scale.\nPrecision Results.'}
               </h1>
               <p className="font-sans text-[16px] md:text-[18px] leading-[1.6] text-white/80 max-w-[400px] m-0 mb-[32px]">
