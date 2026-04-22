@@ -752,10 +752,10 @@ function AboutSection() {
   return (
     <section className="bg-steel-charcoal text-white border-b border-white/10 flex flex-col" id="about">
       {/* Top Half */}
-      <div className="py-[64px] px-[64px] border-b border-white/10">
+      <div className="py-[64px] px-[32px] md:px-[64px] border-b border-white/10">
         <div className="max-w-4xl mx-auto flex flex-col justify-center items-center text-center">
           <span className="font-sans font-bold text-[10px] tracking-[0.3em] uppercase text-white/50 mb-[16px]">02 // The Company</span>
-          <h2 className="font-sans font-extrabold tracking-tight text-[32px] md:text-[48px] leading-tight m-0 uppercase">
+          <h2 className="font-sans font-extrabold tracking-tight text-[22px] sm:text-[32px] md:text-[48px] leading-tight m-0 uppercase">
             Little River Services Inc is classified as selling aggregate and tug boat and barge services.
           </h2>
         </div>
