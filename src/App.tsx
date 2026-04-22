@@ -136,7 +136,7 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
       >
         <div className="flex items-center gap-6">
           <span className="flex items-center gap-2"><Shield size={12} strokeWidth={2} /> FULLY INSURED & LICENSED IN LA</span>
-          <span>OPERATIONS DESK: +1 (555) 019-9182</span>
+          <span>OPERATIONS DESK: +1 (318) 992-5948</span>
         </div>
         <div className="flex gap-6">
           <span className="flex items-center gap-2"><MapPin size={12} strokeWidth={2} /> 683 HWY 459, OLLA LA 71465</span>
@@ -239,7 +239,7 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
                               <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-signal-red font-bold flex items-center gap-2">
                                 <Phone size={12} /> Operations Desk
                               </span>
-                              <span className="font-sans text-[14px] font-bold text-white tracking-tight">+1 (555) 019-9182</span>
+                              <span className="font-sans text-[14px] font-bold text-white tracking-tight">+1 (318) 992-5948</span>
                             </div>
                             <div className="flex flex-col gap-1">
                               <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 font-bold flex items-center gap-2">
@@ -863,7 +863,7 @@ function Footer() {
             </div>
             <div className="font-mono text-[11px] leading-[1.6] text-white/50 space-y-2 mt-12 md:mt-0">
                <p className="m-0">683 Hwy 459<br/>Olla LA 71465</p>
-               <p className="mt-4 m-0">contact@littleriver.com<br/>+1 (555) 019-9182</p>
+               <p className="mt-4 m-0">contact@littleriver.com<br/>+1 (318) 992-5948</p>
             </div>
           </div>
           
@@ -1256,7 +1256,7 @@ function ContactPage() {
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-signal-red font-bold flex items-center gap-2">
                 <Phone size={14} /> Operations Desk
               </span>
-              <span className="font-sans text-[20px] font-black text-white tracking-tight">+1 (555) 019-9182</span>
+              <span className="font-sans text-[20px] font-black text-white tracking-tight">+1 (318) 992-5948</span>
             </div>
 
             <div className="flex flex-col gap-2">
