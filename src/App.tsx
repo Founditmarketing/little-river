@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, Anchor, Shield, TrendingUp, Ship, ArrowUpRight, MessagesSquare, ChevronLeft, ChevronRight, Activity, FileCheck, MapPin, Menu, X } from 'lucide-react';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { ArrowRight, Anchor, Shield, TrendingUp, Ship, ArrowUpRight, MessagesSquare, ChevronLeft, ChevronRight, ChevronDown, Activity, FileCheck, MapPin, Menu, X, Mail, Phone } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
 // --- Assets ---
@@ -77,11 +78,44 @@ const AGGREGATE_CATEGORIES = [
   }
 ];
 
+const SERVICE_PAGES_DATA: Record<string, { title: string, subtitle: string, imagePath: string, bodyTitle: string, bio: string }> = {
+  'tug-boats': {
+    title: 'TUG BOATS',
+    subtitle: '03 // Marine Services',
+    imagePath: HERO_IMAGES.tugs,
+    bodyTitle: 'Reliable fleet operations.',
+    bio: 'Little River Services Inc. operates a reliable fleet of tug boats designed to handle demanding marine operations. Our tug services are executed by highly trained, licensed captains prioritizing precision and safety on the water.'
+  },
+  'barges': {
+    title: 'BARGES',
+    subtitle: '03 // Marine Services',
+    imagePath: HERO_IMAGES.barges,
+    bodyTitle: 'Heavy-duty bulk transport.',
+    bio: 'We provide heavy-duty barge services to facilitate the bulk transport of aggregate and marine equipment. Built for stability and high capacity, our barges ensure that materials reach their destination safely and efficiently.'
+  },
+  'marine-work': {
+    title: 'MARINE WORK',
+    subtitle: '03 // Marine Services',
+    imagePath: HERO_IMAGES.marine,
+    bodyTitle: 'Comprehensive water-based logistics.',
+    bio: 'Our marine work division specializes in comprehensive water-based operations, structural support, and logistical maneuvers. With strict Coast Guard compliance, we execute complex marine projects with absolute reliability.'
+  },
+  'aggregate-products': {
+    title: 'AGGREGATE PRODUCTS',
+    subtitle: '03 // Land Operations',
+    imagePath: LIMESTONE_IMG,
+    bodyTitle: 'Premium limestone & specialty soils.',
+    bio: 'We supply and transport premium limestone aggregates, numbered sizes, and specialty soils for industrial and commercial projects. Our materials meet strict quality standards, ensuring you get exactly what your project demands.'
+  }
+};
+
 // --- Components ---
 
 function Header({ isLoaded = true }: { isLoaded?: boolean }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [hoveredService, setHoveredService] = useState<string>('tug-boats');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,7 +136,7 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
       >
         <div className="flex items-center gap-6">
           <span className="flex items-center gap-2"><Shield size={12} strokeWidth={2} /> FULLY INSURED & LICENSED IN LA</span>
-          <span>24/7 DISPATCH: +1 (555) 019-9182</span>
+          <span>OPERATIONS DESK: +1 (555) 019-9182</span>
         </div>
         <div className="flex gap-6">
           <span className="flex items-center gap-2"><MapPin size={12} strokeWidth={2} /> 683 HWY 459, OLLA LA 71465</span>
@@ -118,11 +152,11 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
         className={`fixed w-full z-40 flex items-stretch ${isScrolled ? 'top-0 bg-white shadow-md border-b border-black/10 min-h-[64px] md:min-h-[80px]' : 'top-0 md:top-[32px] bg-transparent border-b border-white/10 min-h-[80px]'}`}
       >
         <div className={`flex flex-col justify-center px-[32px] relative transition-all duration-300 ${isScrolled ? 'py-2 md:py-3' : 'py-3'}`}>
-          <div className="flex items-center mb-1">
+          <Link to="/" className="flex items-center mb-1 no-underline">
             <span className={`font-sans font-black tracking-[0.05em] uppercase leading-none transition-all duration-300 ${isScrolled ? 'text-black text-[20px] md:text-[28px]' : 'text-white text-[24px] md:text-[28px]'}`}>
               LITTLE RIVER <span className="hidden md:inline">SERVICES </span><span className="text-signal-red">INC.</span>
             </span>
-          </div>
+          </Link>
           <span className={`font-sans font-bold tracking-[0.2em] uppercase transition-all duration-300 ${isScrolled ? 'text-black/50 text-[8px] md:text-[10px]' : 'text-white/70 text-[9px] md:text-[10px]'}`}>
             LIMESTONE AGGREGATES
           </span>
@@ -133,17 +167,122 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
            </button>
         </div>
         <nav className="flex-1 justify-end hidden lg:flex">
-          {['ABOUT', 'SERVICES', 'WHY US', 'CONTACT'].map((item) => (
-            <a key={item} href={`#${item.toLowerCase().replace(' ', '-')}`} className={`flex items-center justify-center px-[32px] h-full border-l group cursor-pointer no-underline transition-colors duration-300 ${isScrolled ? 'border-black/10 hover:bg-black/5' : 'border-white/10 hover:bg-white/10'}`}>
-              <span className={`font-sans text-[11px] font-bold tracking-[0.15em] transition-colors duration-300 ${isScrolled ? 'text-black/60 group-hover:text-black' : 'text-white/80 group-hover:text-white'}`}>
-                {item}
-              </span>
-            </a>
-          ))}
+          {['ABOUT', 'SERVICES', 'WHY US', 'CONTACT'].map((item) => {
+            if (item === 'SERVICES') {
+              return (
+                <div key={item} className="relative h-full flex items-center border-l border-white/10" onMouseEnter={() => setIsServicesOpen(true)} onMouseLeave={() => setIsServicesOpen(false)}>
+                  <div className={`flex items-center justify-center px-[32px] h-full cursor-pointer transition-colors duration-300 ${isScrolled ? 'hover:bg-black/5' : 'hover:bg-white/10'}`}>
+                    <span className={`font-sans text-[11px] font-bold tracking-[0.15em] transition-colors duration-300 flex items-center gap-1 ${isScrolled ? (isServicesOpen ? 'text-black' : 'text-black/60') : (isServicesOpen ? 'text-white' : 'text-white/80')}`}>
+                      {item} <ChevronDown size={14} className={`transition-transform duration-300 ${isServicesOpen ? 'rotate-180' : ''}`} />
+                    </span>
+                  </div>
+                  
+                  <AnimatePresence>
+                    {isServicesOpen && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-[100%] right-0 min-w-[850px] bg-steel-charcoal border border-white/10 shadow-2xl flex z-50 overflow-hidden"
+                      >
+                        {/* Column 1: Image Preview */}
+                        <div className="w-[280px] relative bg-black border-r border-white/10 hidden md:block overflow-hidden">
+                          <AnimatePresence mode="wait">
+                            <motion.img 
+                              key={hoveredService}
+                              src={SERVICE_PAGES_DATA[hoveredService]?.imagePath}
+                              initial={{ opacity: 0, scale: 1.05 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.4 }}
+                              className="absolute inset-0 w-full h-full object-cover opacity-60"
+                            />
+                          </AnimatePresence>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                          <div className="absolute bottom-6 left-6 right-6">
+                            <span className="text-signal-red font-mono text-[10px] uppercase tracking-[0.2em] font-bold block mb-1">Preview</span>
+                            <span className="text-white font-sans text-[16px] font-black uppercase tracking-[0.05em]">{SERVICE_PAGES_DATA[hoveredService]?.title}</span>
+                          </div>
+                        </div>
+
+                        {/* Column 2: Service Links (2x2 Grid) */}
+                        <div className="flex-1 p-[32px] grid grid-cols-2 gap-x-8 gap-y-4">
+                          {[
+                            { id: 'tug-boats', name: 'Tug Boats', path: '/services/tug-boats', desc: 'Reliable fleet operations for demanding tasks.' },
+                            { id: 'barges', name: 'Barges', path: '/services/barges', desc: 'Heavy-duty transport and stable platforms.' },
+                            { id: 'marine-work', name: 'Marine Work', path: '/services/marine-work', desc: 'Comprehensive structural & logistical ops.' },
+                            { id: 'aggregate-products', name: 'Aggregate Products', path: '/services/aggregate-products', desc: 'Premium limestone and specialty soils.' }
+                          ].map(subItem => (
+                            <Link 
+                              key={subItem.id} 
+                              to={subItem.path} 
+                              onMouseEnter={() => setHoveredService(subItem.id)}
+                              onClick={() => setIsServicesOpen(false)}
+                              className="group flex flex-col p-4 rounded-md hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 no-underline"
+                            >
+                              <span className="font-sans text-[14px] font-black tracking-[0.1em] text-white uppercase mb-1 flex items-center justify-between">
+                                {subItem.name}
+                                <ArrowUpRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity text-signal-red" />
+                              </span>
+                              <span className="font-sans text-[12px] text-white/50 leading-snug">
+                                {subItem.desc}
+                              </span>
+                            </Link>
+                          ))}
+                        </div>
+
+                        {/* Column 3: Contact Info */}
+                        <div className="w-[240px] bg-black/20 border-l border-white/10 p-[32px] flex flex-col justify-center">
+                          <div className="flex flex-col gap-6">
+                            <div className="flex flex-col gap-1">
+                              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-signal-red font-bold flex items-center gap-2">
+                                <Phone size={12} /> Operations Desk
+                              </span>
+                              <span className="font-sans text-[14px] font-bold text-white tracking-tight">+1 (555) 019-9182</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 font-bold flex items-center gap-2">
+                                <Mail size={12} /> Email
+                              </span>
+                              <span className="font-sans text-[12px] text-white/80">posey.lrs@yahoo.com</span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 font-bold flex items-center gap-2">
+                                <MapPin size={12} /> Headquarters
+                              </span>
+                              <span className="font-sans text-[12px] leading-relaxed text-white/80">683 Hwy 459<br/>Olla, LA 71465</span>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            }
+
+            const isPageRoute = item === 'CONTACT' || item === 'ABOUT' || item === 'WHY US';
+            const path = item === 'ABOUT' ? '/about' : item === 'WHY US' ? '/why-us' : '/contact';
+            
+            const Component = isPageRoute ? Link : 'a';
+            
+            return (
+              <Component 
+                key={item} 
+                to={isPageRoute ? path : undefined}
+                href={!isPageRoute ? `/#${item.toLowerCase().replace(' ', '-')}` : undefined}
+                className={`flex items-center justify-center px-[32px] h-full border-l group cursor-pointer no-underline transition-colors duration-300 ${isScrolled ? 'border-black/10 hover:bg-black/5' : 'border-white/10 hover:bg-white/10'}`}
+              >
+                <span className={`font-sans text-[11px] font-bold tracking-[0.15em] transition-colors duration-300 ${isScrolled ? 'text-black/60 group-hover:text-black' : 'text-white/80 group-hover:text-white'}`}>
+                  {item}
+                </span>
+              </Component>
+            );
+          })}
         </nav>
       </motion.header>
 
-      {/* Mobile Slide-out Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
@@ -156,7 +295,6 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: "spring", stiffness: 300, damping: 30 }}
               className="fixed top-0 right-0 h-full w-[85%] max-w-[360px] bg-steel-charcoal z-[70] flex flex-col border-l border-white/10 shadow-2xl lg:hidden"
             >
-              {/* Menu Header */}
               <div className="p-[24px] flex justify-between items-center border-b border-white/10 bg-black/20">
                 <div className="flex flex-col">
                   <span className="font-sans font-black text-[18px] tracking-[0.05em] uppercase leading-none text-white mb-1">
@@ -171,29 +309,77 @@ function Header({ isLoaded = true }: { isLoaded?: boolean }) {
                 </button>
               </div>
 
-              {/* Menu Links */}
               <div className="flex flex-col flex-1 overflow-y-auto">
-                {['ABOUT', 'SERVICES', 'WHY US', 'CONTACT'].map((item, i) => (
-                  <a 
-                    key={item} 
-                    href={`#${item.toLowerCase().replace(' ', '-')}`} 
-                    onClick={() => setIsMenuOpen(false)} 
-                    className="px-[32px] py-[28px] border-b border-white/5 font-sans text-[22px] font-black tracking-[0.1em] text-white uppercase no-underline hover:text-signal-red hover:bg-white/5 transition-all flex items-center justify-between group"
-                  >
-                    <span className="flex items-center gap-6">
-                      <span className="text-[11px] text-white/20 font-mono font-normal">0{i+1}</span>
-                      {item}
-                    </span>
-                    <ArrowRight size={20} className="opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all text-signal-red" />
-                  </a>
-                ))}
+                {['ABOUT', 'SERVICES', 'WHY US', 'CONTACT'].map((item, i) => {
+                  if (item === 'SERVICES') {
+                    return (
+                      <div key={item} className="flex flex-col border-b border-white/5">
+                        <button 
+                          onClick={() => setIsServicesOpen(!isServicesOpen)} 
+                          className="px-[32px] py-[28px] font-sans text-[22px] font-black tracking-[0.1em] text-white uppercase hover:text-signal-red hover:bg-white/5 transition-all flex items-center justify-between group cursor-pointer border-none bg-transparent"
+                        >
+                          {item}
+                          <ChevronDown size={24} className={`transition-transform duration-300 ${isServicesOpen ? 'rotate-180' : ''} text-signal-red`} />
+                        </button>
+                        
+                        <AnimatePresence>
+                          {isServicesOpen && (
+                            <motion.div 
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              className="overflow-hidden bg-black/20 flex flex-col"
+                            >
+                              {[
+                                { name: 'Tug Boats', path: '/services/tug-boats' },
+                                { name: 'Barges', path: '/services/barges' },
+                                { name: 'Marine Work', path: '/services/marine-work' },
+                                { name: 'Aggregate Products', path: '/services/aggregate-products' }
+                              ].map(subItem => (
+                                <Link 
+                                  key={subItem.name} 
+                                  to={subItem.path} 
+                                  onClick={() => setIsMenuOpen(false)}
+                                  className="px-[48px] py-[20px] font-sans text-[16px] font-bold tracking-[0.1em] text-white/60 uppercase hover:text-white hover:bg-white/5 transition-colors no-underline border-l-2 border-transparent hover:border-signal-red"
+                                >
+                                  {subItem.name}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  }
+
+                  const isPageRoute = item === 'CONTACT' || item === 'ABOUT' || item === 'WHY US';
+                  const path = item === 'ABOUT' ? '/about' : item === 'WHY US' ? '/why-us' : '/contact';
+                  
+                  const Component = isPageRoute ? Link : 'a';
+                  
+                  return (
+                    <Component 
+                      key={item} 
+                      to={isPageRoute ? path : undefined}
+                      href={!isPageRoute ? `/#${item.toLowerCase().replace(' ', '-')}` : undefined}
+                      onClick={() => setIsMenuOpen(false)} 
+                      className="px-[32px] py-[28px] border-b border-white/5 font-sans text-[22px] font-black tracking-[0.1em] text-white uppercase no-underline hover:text-signal-red hover:bg-white/5 transition-all flex items-center justify-between group"
+                    >
+                      <span className="flex items-center gap-6">
+                        <span className="text-[11px] text-white/20 font-mono font-normal">0{i+1}</span>
+                        {item}
+                      </span>
+                      <ArrowUpRight size={24} className="opacity-0 group-hover:opacity-100 transition-opacity text-signal-red" />
+                    </Component>
+                  );
+                })}
               </div>
 
               {/* Menu Footer */}
               <div className="mt-auto bg-black/30 p-[32px] flex flex-col gap-3 border-t border-white/10">
                  <div className="flex items-center gap-3 font-mono text-[10px] text-signal-red font-bold tracking-[0.15em] uppercase mb-1">
                    <span className="w-1.5 h-1.5 rounded-full bg-signal-red animate-pulse"></span>
-                   24/7 Dispatch
+                   Operations Desk
                  </div>
                  <div className="font-sans font-black text-[24px] tracking-tight text-white">+1 (555) 019-9182</div>
                  <div className="font-sans text-[13px] text-white/50 leading-relaxed border-t border-white/10 pt-4 mt-2">
@@ -221,27 +407,68 @@ function Hero({ isLoaded = true }: { isLoaded?: boolean }) {
   };
 
   const services = [
-    { title: 'TUG BOATS', description: 'High-horsepower inland and coastal towing services.' },
-    { title: 'BARGES', description: 'Scalable transport for aggregate and heavy equipment.' },
-    { title: 'MARINE WORK', description: 'Comprehensive industrial marine construction support.' }
+    { 
+      title: 'TUG BOATS', 
+      heroTitle: 'Reliable Fleet\nOperations.',
+      heroDesc: 'Little River Services Inc. operates a reliable fleet of tug boats designed to handle demanding marine operations.',
+      description: 'High-horsepower inland and coastal towing services.',
+      path: '/services/tug-boats'
+    },
+    { 
+      title: 'BARGES', 
+      heroTitle: 'Heavy-Duty\nBulk Transport.',
+      heroDesc: 'We provide heavy-duty barge services to facilitate the bulk transport of aggregate and marine equipment.',
+      description: 'Scalable transport for aggregate and heavy equipment.',
+      path: '/services/barges'
+    },
+    { 
+      title: 'MARINE WORK', 
+      heroTitle: 'Comprehensive\nLogistics.',
+      heroDesc: 'Our marine work division specializes in comprehensive water-based operations, structural support, and logistical maneuvers.',
+      description: 'Comprehensive industrial marine construction support.',
+      path: '/services/marine-work'
+    }
   ];
+
+  const activeService = services.find(s => s.title === hoveredService);
 
   return (
     <section className="relative h-auto lg:h-screen min-h-[600px] w-full overflow-hidden bg-black flex flex-col lg:flex-row">
-      {/* Background Image placed behind gradient overlay */}
+      {/* Background Media placed behind gradient overlay */}
       <div className="absolute inset-0 z-0 bg-black">
+        {/* Desktop Video Background (Hidden on Mobile) */}
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline 
+          className={`absolute inset-0 w-full h-full object-cover hidden lg:block transition-opacity duration-700 ease-in-out ${hoveredService === null ? 'opacity-85' : 'opacity-0'}`}
+        >
+          <source src="/littleriverherovideo.mp4" type="video/mp4" />
+        </video>
+
+        {/* Mobile Default Image (Hidden on Desktop) */}
+        <img 
+          src={HERO_IMAGES.default} 
+          className={`absolute inset-0 w-full h-full object-cover lg:hidden transition-opacity duration-700 ease-in-out ${hoveredService === null ? 'opacity-85' : 'opacity-0'}`} 
+          alt="Mobile resting state"
+        />
+
+        {/* Active Hover Images (Desktop & Mobile) */}
         <AnimatePresence>
-          <motion.img 
-            key={getBgImage()}
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 0.85, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            src={getBgImage()}
-            referrerPolicy="no-referrer"
-            className="absolute inset-0 w-full h-full object-cover"
-            alt="Industrial maritime backdrop"
-          />
+          {hoveredService && (
+            <motion.img 
+              key={hoveredService}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 0.85, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+              src={getBgImage()}
+              referrerPolicy="no-referrer"
+              className="absolute inset-0 w-full h-full object-cover"
+              alt="Industrial maritime backdrop"
+            />
+          )}
         </AnimatePresence>
       </div>
 
@@ -254,19 +481,35 @@ function Hero({ isLoaded = true }: { isLoaded?: boolean }) {
         className="relative z-20 w-full h-full flex flex-col lg:grid lg:grid-cols-[1fr_1.2fr] pt-[80px] md:pt-[112px]"
       >
         {/* Left Viewport */}
-        <div className="flex flex-col justify-center p-[32px] md:p-[64px] border-b lg:border-b-0 lg:border-r border-white/10">
-          <span className="font-sans font-bold text-[10px] tracking-[0.3em] uppercase text-white/50 mb-[16px]">
-            EXPLORE OUR EXPERTISE
-          </span>
-          <h1 className="font-sans font-extrabold text-[40px] md:text-[56px] leading-[0.95] tracking-[-0.03em] uppercase text-white m-0 mb-[24px]">
-            Industrial Scale.<br/>Precision Results.
-          </h1>
-          <p className="font-sans text-[16px] md:text-[18px] leading-[1.6] text-white/80 max-w-[400px] m-0 mb-[32px]">
-            Delivering massive scale with microscopic precision across the inland waterways and Gulf Coast.
-          </p>
-          <button className="bg-signal-red border border-signal-red hover:bg-transparent hover:text-signal-red text-white font-mono text-[14px] md:text-[16px] font-bold tracking-[0.1em] uppercase py-[16px] px-[32px] md:py-[24px] md:px-[48px] w-fit flex items-center gap-3 transition-all duration-300 group cursor-pointer">
-            Get A Quote <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+        <div className="flex flex-col justify-center p-[32px] md:p-[64px] border-b lg:border-b-0 lg:border-r border-white/10 relative overflow-hidden min-h-[420px] lg:min-h-0">
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={activeService ? activeService.title : 'default'}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col"
+            >
+              <span className="font-sans font-bold text-[10px] tracking-[0.3em] uppercase text-white/50 mb-[16px]">
+                {activeService ? `SERVICE HIGHLIGHT // 0${services.indexOf(activeService) + 1}` : 'EXPLORE OUR EXPERTISE'}
+              </span>
+              <h1 className="font-sans font-extrabold text-[40px] md:text-[56px] leading-[0.95] tracking-[-0.03em] uppercase text-white m-0 mb-[24px] whitespace-pre-line">
+                {activeService ? activeService.heroTitle : 'Industrial Scale.\nPrecision Results.'}
+              </h1>
+              <p className="font-sans text-[16px] md:text-[18px] leading-[1.6] text-white/80 max-w-[400px] m-0 mb-[32px]">
+                {activeService ? activeService.heroDesc : 'Delivering massive scale with microscopic precision across the inland waterways and Gulf Coast.'}
+              </p>
+              
+              <Link 
+                to={activeService ? activeService.path : '/contact'}
+                className="bg-signal-red border border-signal-red hover:bg-transparent hover:text-signal-red text-white font-mono text-[14px] md:text-[16px] font-bold tracking-[0.1em] uppercase py-[16px] px-[32px] md:py-[24px] md:px-[48px] w-fit flex items-center gap-3 transition-all duration-300 group cursor-pointer no-underline"
+              >
+                {activeService ? 'Learn More' : 'Get A Quote'} 
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         {/* Right Viewport */}
@@ -277,6 +520,7 @@ function Hero({ isLoaded = true }: { isLoaded?: boolean }) {
               className="flex-1 group relative border-b border-white/10 last:border-b-0 px-[32px] md:px-[64px] py-[32px] lg:py-0 flex flex-col justify-center cursor-pointer transition-all duration-300 hover:bg-white/5"
               onMouseEnter={() => setHoveredService(service.title)}
               onMouseLeave={() => setHoveredService(null)}
+              onClick={() => setHoveredService(service.title)}
             >
               <div className="relative">
                 <h3 className="font-sans font-black text-[32px] md:text-[48px] tracking-[-0.01em] text-white uppercase m-0 leading-none transition-transform duration-300 lg:group-hover:-translate-y-2">
@@ -301,7 +545,7 @@ function Hero({ isLoaded = true }: { isLoaded?: boolean }) {
 
 function TrustBanner() {
   const items = [
-    "LITTLE RIVER SERVICES INC.", "INLAND WATERWAY LOGISTICS", "24/7 DISPATCH",
+    "LITTLE RIVER SERVICES INC.", "INLAND WATERWAY LOGISTICS", "DIRECT OPERATIONS",
     "GULF COAST OPERATIONS", "HEAVY TOW OPERATIONS", "BULK AGGREGATE"
   ];
   
@@ -373,7 +617,7 @@ function AggregateIndex() {
       <div className="bg-transparent flex flex-col md:flex-row items-center justify-between p-[32px] md:p-[48px] w-full border-t border-white/10">
         <div className="flex flex-col mb-[24px] md:mb-0">
           <h4 className="font-sans font-black text-[18px] md:text-[24px] uppercase text-white m-0 leading-tight">Need a Specific Size or Custom Blend?</h4>
-          <p className="font-sans text-[14px] md:text-[16px] text-white/70 m-0 mt-[8px]">Contact our dispatch for current availability, pricing, and specialized materials.</p>
+          <p className="font-sans text-[14px] md:text-[16px] text-white/70 m-0 mt-[8px]">Contact our office for current availability, pricing, and specialized materials.</p>
         </div>
         <button className="bg-signal-red border border-signal-red hover:bg-transparent hover:text-signal-red text-white font-mono text-[13px] md:text-[14px] font-bold tracking-[0.1em] uppercase py-[18px] px-[36px] md:py-[20px] md:px-[40px] transition-all duration-300 cursor-pointer flex-shrink-0 flex items-center gap-3 group">
           Call +1 (555) 019-9182 <ArrowUpRight size={18} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
@@ -598,7 +842,7 @@ function CTASection() {
           Ready to Load-Out?
         </h2>
         <div className="flex items-center gap-4 text-white group-hover:translate-x-4 transition-transform duration-300">
-           <span className="font-mono text-sm tracking-[0.2em] font-bold uppercase">Contact Dispatch</span>
+           <span className="font-mono text-sm tracking-[0.2em] font-bold uppercase">Contact Operations</span>
            <ArrowRight size={32} strokeWidth={2} />
         </div>
     </section>
@@ -671,7 +915,7 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       className="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center pointer-events-none"
     >
       <div className="relative flex flex-col items-center w-full max-w-2xl px-6">
-        <h1 className="font-sans font-black text-[22px] md:text-3xl tracking-[0.1em] text-black m-0 mb-3 uppercase text-center w-full whitespace-nowrap">
+        <h1 className="font-sans font-black text-[15px] sm:text-[22px] md:text-3xl tracking-[0.1em] text-black m-0 mb-3 uppercase text-center w-full whitespace-nowrap">
           LITTLE RIVER SERVICES <span className="text-signal-red">INC.</span>
         </h1>
         {/* Underline Loading Bar */}
@@ -688,6 +932,399 @@ function LoadingScreen({ onComplete }: { onComplete: () => void }) {
         </div>
       </div>
     </motion.div>
+  );
+}
+
+function Home({ isLoaded }: { isLoaded: boolean }) {
+  return (
+    <main className="flex-1 flex flex-col">
+      <Hero isLoaded={isLoaded} />
+      <TrustBanner />
+      <AggregateIndex />
+      <ServicesCarousel />
+      <AboutSection />
+      <WhyChooseUs />
+      <CTASection />
+    </main>
+  );
+}
+
+function PageHero({ title, subtitle, imagePath }: { title: string, subtitle: string, imagePath: string }) {
+  return (
+    <div className="w-full bg-black pt-[200px] pb-[100px] px-[32px] md:px-[64px] border-b border-white/10 relative overflow-hidden">
+      <div className="absolute inset-0 z-0 bg-cover bg-center opacity-30" style={{ backgroundImage: `url('${imagePath}')` }}></div>
+      <div className="absolute inset-0 z-10 bg-gradient-to-r from-black via-black/60 to-transparent"></div>
+      <div className="relative z-20 max-w-7xl mx-auto flex flex-col">
+        <span className="font-sans font-bold text-[10px] tracking-[0.3em] uppercase text-signal-red mb-[16px]">{subtitle}</span>
+        <h1 className="font-sans font-black text-[40px] md:text-[64px] leading-none tracking-[-0.02em] text-white m-0">
+          {title}
+        </h1>
+      </div>
+    </div>
+  );
+}
+
+function AboutPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <motion.main 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.8 }}
+      className="flex-1 flex flex-col bg-steel-charcoal"
+    >
+      <PageHero 
+        title="COMPANY OVERVIEW" 
+        subtitle="02 // The Company" 
+        imagePath="/littleriversectionimage.jpeg" 
+      />
+
+      {/* Main Content Grid */}
+      <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-0 md:border-x border-b border-white/10 min-h-[400px] bg-transparent">
+        
+        {/* Left Column - Company Bio */}
+        <div className="p-[48px] md:p-[64px] flex flex-col border-b lg:border-b-0 lg:border-r border-white/10">
+          <h2 className="font-sans font-black text-[32px] md:text-[48px] lg:text-[56px] uppercase text-white tracking-[-0.02em] mb-[40px] leading-[1.1] max-w-2xl">
+            Classified as selling aggregate and marine services.
+          </h2>
+          <div className="space-y-8 font-sans text-[18px] md:text-[22px] text-white/70 leading-relaxed max-w-3xl">
+            <p>
+              Little River Services Inc. operates under uncompromising standards. Our commitment to safety, compliance, and professional reliability defines every project we undertake. 
+            </p>
+            <p>
+              From ensuring strict Coast Guard compliance to maintaining continuous zero-incident operations, we provide our clients with the confidence that their operations are in the best possible hands. We don't just meet industry benchmarks—we set them.
+            </p>
+          </div>
+        </div>
+
+        {/* Right Column - Certifications & Compliance Stack */}
+        <div className="flex flex-col divide-y divide-white/10 bg-black/20">
+          
+          {/* Card 1 */}
+          <div className="p-[32px] md:p-[48px] flex items-start gap-6 group hover:bg-white/5 transition-colors duration-500">
+            <div className="w-[48px] h-[48px] rounded-full bg-signal-red/10 border border-signal-red/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 mt-1">
+              <Shield className="text-signal-red" size={24} strokeWidth={1.5} />
+            </div>
+            <div className="flex flex-col">
+              <h3 className="font-sans font-bold text-white text-[18px] mb-[8px] uppercase tracking-[0.05em]">Fully Insured & Licensed</h3>
+              <p className="font-sans text-[15px] text-white/60 leading-relaxed m-0">
+                Fully licensed to operate in Louisiana with comprehensive insurance coverage for all marine and aggregate operations.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 2 */}
+          <div className="p-[32px] md:p-[48px] flex items-start gap-6 group hover:bg-white/5 transition-colors duration-500">
+            <div className="w-[48px] h-[48px] rounded-full bg-signal-red/10 border border-signal-red/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 mt-1">
+              <Activity className="text-signal-red" size={24} strokeWidth={1.5} />
+            </div>
+            <div className="flex flex-col">
+              <h3 className="font-sans font-bold text-white text-[18px] mb-[8px] uppercase tracking-[0.05em]">Active Safety Program</h3>
+              <p className="font-sans text-[15px] text-white/60 leading-relaxed m-0">
+                A rigorous safety program is in full force across our entire fleet and land operations.
+              </p>
+            </div>
+          </div>
+
+          {/* Card 3 */}
+          <div className="p-[32px] md:p-[48px] flex items-start gap-6 group hover:bg-white/5 transition-colors duration-500">
+            <div className="w-[48px] h-[48px] rounded-full bg-signal-red/10 border border-signal-red/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 mt-1">
+              <FileCheck className="text-signal-red" size={24} strokeWidth={1.5} />
+            </div>
+            <div className="flex flex-col">
+              <h3 className="font-sans font-bold text-white text-[18px] mb-[8px] uppercase tracking-[0.05em]">DOT Compliance</h3>
+              <p className="font-sans text-[15px] text-white/60 leading-relaxed m-0">
+                Strict adherence to DOT Drug and Alcohol testing protocols for all active personnel and operators.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      
+      <CTASection />
+    </motion.main>
+  );
+}
+
+function ServicePage({ type }: { type: keyof typeof SERVICE_PAGES_DATA }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [type]);
+
+  const data = SERVICE_PAGES_DATA[type];
+
+  if (!data) return null;
+
+  return (
+    <motion.main 
+      key={type}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.8 }}
+      className="flex-1 flex flex-col bg-steel-charcoal"
+    >
+      <PageHero 
+        title={data.title} 
+        subtitle={data.subtitle} 
+        imagePath={data.imagePath} 
+      />
+
+      {/* Main Content Grid */}
+      <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-0 md:border-x border-b border-white/10 min-h-[400px] bg-transparent">
+        
+        {/* Left Column - Service Bio */}
+        <div className="p-[48px] md:p-[64px] flex flex-col border-b lg:border-b-0 lg:border-r border-white/10">
+          <h2 className="font-sans font-black text-[32px] md:text-[48px] lg:text-[56px] uppercase text-white tracking-[-0.02em] mb-[40px] leading-[1.1] max-w-2xl">
+            {data.bodyTitle}
+          </h2>
+          <div className="space-y-8 font-sans text-[18px] md:text-[22px] text-white/70 leading-relaxed max-w-3xl">
+            <p>
+              {data.bio}
+            </p>
+            <p>
+              From ensuring strict Coast Guard compliance to maintaining continuous zero-incident operations, we provide our clients with the confidence that their operations are in the best possible hands. We don't just meet industry benchmarks—we set them.
+            </p>
+          </div>
+          
+          {type === 'aggregate-products' && (
+            <div className="mt-[64px] flex flex-col gap-8 bg-black/20 p-[32px] md:p-[48px] border border-white/5">
+              <h3 className="font-sans font-black text-[20px] uppercase text-white tracking-[0.05em] border-b border-white/10 pb-4">Product Inventory</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
+                {AGGREGATE_CATEGORIES.map((category, catIdx) => (
+                  <div key={catIdx} className="flex flex-col">
+                    <h4 className="font-sans font-bold text-[14px] tracking-[0.1em] text-signal-red uppercase mb-[16px]">
+                      {category.title}
+                    </h4>
+                    <ul className="flex flex-col gap-[10px] m-0 p-0 list-none">
+                      {category.items.map((item, itemIdx) => (
+                        <li key={`${catIdx}-${itemIdx}`} className="font-mono text-[15px] text-white/80 flex items-center gap-3">
+                          <span className="w-1.5 h-1.5 bg-white/20 rounded-full shrink-0"></span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Right Column - Certifications & Compliance Stack */}
+        <div className="flex flex-col divide-y divide-white/10 bg-black/20">
+          
+          <div className="p-[32px] md:p-[48px] flex items-start gap-6 group hover:bg-white/5 transition-colors duration-500">
+            <div className="w-[48px] h-[48px] rounded-full bg-signal-red/10 border border-signal-red/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 mt-1">
+              <Shield className="text-signal-red" size={24} strokeWidth={1.5} />
+            </div>
+            <div className="flex flex-col">
+              <h3 className="font-sans font-bold text-white text-[18px] mb-[8px] uppercase tracking-[0.05em]">Fully Insured & Licensed</h3>
+              <p className="font-sans text-[15px] text-white/60 leading-relaxed m-0">
+                Fully licensed to operate in Louisiana with comprehensive insurance coverage for all marine and aggregate operations.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-[32px] md:p-[48px] flex items-start gap-6 group hover:bg-white/5 transition-colors duration-500">
+            <div className="w-[48px] h-[48px] rounded-full bg-signal-red/10 border border-signal-red/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 mt-1">
+              <Activity className="text-signal-red" size={24} strokeWidth={1.5} />
+            </div>
+            <div className="flex flex-col">
+              <h3 className="font-sans font-bold text-white text-[18px] mb-[8px] uppercase tracking-[0.05em]">Active Safety Program</h3>
+              <p className="font-sans text-[15px] text-white/60 leading-relaxed m-0">
+                A rigorous safety program is in full force across our entire fleet and land operations.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-[32px] md:p-[48px] flex items-start gap-6 group hover:bg-white/5 transition-colors duration-500">
+            <div className="w-[48px] h-[48px] rounded-full bg-signal-red/10 border border-signal-red/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 mt-1">
+              <FileCheck className="text-signal-red" size={24} strokeWidth={1.5} />
+            </div>
+            <div className="flex flex-col">
+              <h3 className="font-sans font-bold text-white text-[18px] mb-[8px] uppercase tracking-[0.05em]">DOT Compliance</h3>
+              <p className="font-sans text-[15px] text-white/60 leading-relaxed m-0">
+                Strict adherence to DOT Drug and Alcohol testing protocols for all active personnel and operators.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      
+      <CTASection />
+    </motion.main>
+  );
+}
+
+function WhyUsPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <motion.main 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.8 }}
+      className="flex-1 flex flex-col bg-steel-charcoal"
+    >
+      <PageHero 
+        title="TRUST & RELIABILITY" 
+        subtitle="04 // Why Us" 
+        imagePath="/littleriversectionimage2.jpeg" 
+      />
+
+      {/* Main Content Grid */}
+      <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-0 md:border-x border-b border-white/10 min-h-[400px] bg-transparent">
+        
+        {/* Left Column - Why Us Bio */}
+        <div className="p-[48px] md:p-[64px] flex flex-col border-b lg:border-b-0 lg:border-r border-white/10">
+          <h2 className="font-sans font-black text-[32px] md:text-[48px] lg:text-[56px] uppercase text-white tracking-[-0.02em] mb-[40px] leading-[1.1] max-w-2xl">
+            Why Choose Little River Services
+          </h2>
+          <div className="space-y-8 font-sans text-[18px] md:text-[22px] text-white/70 leading-relaxed max-w-3xl">
+            <p>
+              We operate under uncompromising standards. Our commitment to safety, compliance, and professional reliability defines every project we undertake. From ensuring strict Coast Guard compliance to maintaining continuous zero-incident operations, we provide our clients with the confidence that their operations are in the best possible hands. 
+            </p>
+            <p>
+              We don't just meet industry benchmarks—we set them. Our team is fully trained, tested, and equipped to handle demanding assignments across the inland waterways.
+            </p>
+          </div>
+        </div>
+
+        {/* Right Column - Certifications Stack */}
+        <div className="flex flex-col divide-y divide-white/10 bg-black/20">
+          {WHY_CHOOSE_US_DATA.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <div key={index} className="p-[32px] md:p-[48px] flex items-start gap-6 group hover:bg-white/5 transition-colors duration-500">
+                <div className="w-[48px] h-[48px] rounded-full bg-signal-red/10 border border-signal-red/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 mt-1">
+                  <Icon className="text-signal-red" size={24} strokeWidth={1.5} />
+                </div>
+                <div className="flex flex-col">
+                  <h3 className="font-sans font-bold text-white text-[18px] mb-[8px] uppercase tracking-[0.05em]">{item.title}</h3>
+                  <p className="font-sans text-[15px] text-white/60 leading-relaxed m-0">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      
+      <CTASection />
+    </motion.main>
+  );
+}
+
+function ContactPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <motion.main 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.8 }}
+      className="flex-1 flex flex-col bg-steel-charcoal"
+    >
+      <PageHero 
+        title="CONTACT OPERATIONS" 
+        subtitle="04 // Get In Touch" 
+        imagePath="/littlerivermarinework.jpeg" 
+      />
+
+      {/* Main Content Grid */}
+      <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-0 md:border-x border-b border-white/10 min-h-[600px] bg-transparent">
+        
+        {/* Left Column - Contact Info */}
+        <div className="p-[32px] md:p-[64px] flex flex-col border-b lg:border-b-0 lg:border-r border-white/10 bg-black/20">
+          <h2 className="font-sans font-black text-[24px] uppercase text-white tracking-[0.05em] mb-[48px]">Operations Center</h2>
+          
+          <div className="flex flex-col gap-[32px]">
+            <div className="flex flex-col gap-2">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-signal-red font-bold flex items-center gap-2">
+                <Phone size={14} /> Operations Desk
+              </span>
+              <span className="font-sans text-[20px] font-black text-white tracking-tight">+1 (555) 019-9182</span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold flex items-center gap-2">
+                <MapPin size={14} /> Corporate Headquarters
+              </span>
+              <span className="font-sans text-[15px] leading-relaxed text-white/80">
+                683 Hwy 459<br/>
+                Olla, LA 71465
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold flex items-center gap-2">
+                <Mail size={14} /> General Inquiries
+              </span>
+              <span className="font-sans text-[15px] text-white/80">
+                posey.lrs@yahoo.com
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column - Contact Form */}
+        <div className="p-[32px] md:p-[64px] flex flex-col justify-center">
+          <h2 className="font-sans font-black text-[24px] uppercase text-white tracking-[0.05em] mb-[32px]">Direct Inquiry</h2>
+          <form className="flex flex-col gap-[24px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-[24px]">
+              <div className="flex flex-col">
+                <label className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3">Full Name</label>
+                <input type="text" className="w-full bg-black/40 border border-white/10 p-[16px] font-sans text-[16px] text-white placeholder-white/20 focus:outline-none focus:border-signal-red transition-colors" placeholder="John Doe" />
+              </div>
+              <div className="flex flex-col">
+                <label className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3">Email Address</label>
+                <input type="email" className="w-full bg-black/40 border border-white/10 p-[16px] font-sans text-[16px] text-white placeholder-white/20 focus:outline-none focus:border-signal-red transition-colors" placeholder="john@company.com" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-[24px]">
+              <div className="flex flex-col">
+                <label className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3">Company Name</label>
+                <input type="text" className="w-full bg-black/40 border border-white/10 p-[16px] font-sans text-[16px] text-white placeholder-white/20 focus:outline-none focus:border-signal-red transition-colors" placeholder="Enter company name" />
+              </div>
+              <div className="flex flex-col">
+                <label className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3">Service Interest</label>
+                <select defaultValue="" className="w-full bg-black/40 border border-white/10 p-[16px] font-sans text-[16px] text-white focus:outline-none focus:border-signal-red transition-colors cursor-pointer">
+                  <option value="" disabled className="text-black">Select an option...</option>
+                  <option value="tug_boats" className="text-black">Tug Boats</option>
+                  <option value="barges" className="text-black">Barges</option>
+                  <option value="marine_work" className="text-black">Marine Work</option>
+                  <option value="products" className="text-black">Products</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <label className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-3">Message Details</label>
+              <textarea placeholder="How can we assist you?" rows={5} className="w-full bg-black/40 border border-white/10 p-[16px] font-sans text-[16px] text-white placeholder-white/20 focus:outline-none focus:border-signal-red transition-colors resize-none"></textarea>
+            </div>
+
+            <button type="button" className="bg-signal-red border border-signal-red hover:bg-transparent hover:text-signal-red text-white font-mono text-[13px] md:text-[14px] font-bold tracking-[0.1em] uppercase py-[16px] px-[32px] transition-all duration-300 cursor-pointer mt-4 w-full md:w-auto self-start">
+              Transmit Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </motion.main>
   );
 }
 
@@ -710,16 +1347,17 @@ export default function App() {
       
       <div className="flex-1 flex flex-col w-full h-full relative">
         <Header isLoaded={isLoaded} />
-        <main className="flex-1 flex flex-col">
-          <Hero isLoaded={isLoaded} />
-        <TrustBanner />
-        <AggregateIndex />
-        <ServicesCarousel />
-        <AboutSection />
-        <WhyChooseUs />
-        <CTASection />
+        <Routes>
+          <Route path="/" element={<Home isLoaded={isLoaded} />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/services/tug-boats" element={<ServicePage type="tug-boats" />} />
+          <Route path="/services/barges" element={<ServicePage type="barges" />} />
+          <Route path="/services/marine-work" element={<ServicePage type="marine-work" />} />
+          <Route path="/services/aggregate-products" element={<ServicePage type="aggregate-products" />} />
+          <Route path="/why-us" element={<WhyUsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Routes>
         <Footer />
-      </main>
       
       {/* Contact Modal */}
       <AnimatePresence>
@@ -733,7 +1371,7 @@ export default function App() {
           >
             {/* Top Header */}
             <div className="bg-signal-red p-4 px-6 flex items-center justify-between text-white relative border-b border-white/10">
-              <span className="font-sans font-black text-[14px] tracking-[0.15em] uppercase text-white m-0">Contact Dispatch</span>
+              <span className="font-sans font-black text-[14px] tracking-[0.15em] uppercase text-white m-0">Contact Operations</span>
             </div>
             
             {/* Detailed Form */}
